@@ -8,7 +8,7 @@ namespace daikin_s21 {
 
 enum class DaikinClimateMode : uint8_t {
   Disabled = '0',
-  Auto = '1',
+  Auto = '7',
   Dry = '2',
   Cool = '3',
   Heat = '4',
