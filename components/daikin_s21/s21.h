@@ -67,7 +67,7 @@ class DaikinS21 : public PollingComponent {
   uart::UARTComponent *tx_uart{nullptr};
   uart::UARTComponent *rx_uart{nullptr};
   bool ready = false;
-  bool debug_protocol = false;
+  bool debug_protocol = true;
 
   bool power_on = false;
   DaikinClimateMode mode = DaikinClimateMode::Disabled;
