@@ -419,7 +419,19 @@ void DaikinS21::set_daikin_climate_settings(bool power_on,
     this->update();
   }
 }
-
+//
+// The D5 command controls the louvre. It has a 4 character payload.
+// 
+// Pos	Description  Values
+// 1	  Swing	       0: Off
+//                   1: Vertical swing
+//                   2: Horizontal swing
+//                   7: Both swing
+// 1	  Swing?	     0: Off
+//                   ?: On
+// 1	  Unknown	     0
+// 1	  Unknown	     0
+  
 void DaikinS21::set_swing_settings(bool swing_v, bool swing_h) {
   std::vector<uint8_t> cmd = {
       (uint8_t) ('0' + (swing_h ? 2 : 0) + (swing_v ? 1 : 0) +
