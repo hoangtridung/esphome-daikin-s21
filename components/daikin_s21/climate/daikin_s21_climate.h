@@ -20,6 +20,7 @@ static const climate::ClimateMode OpModes[] = {
     climate::CLIMATE_MODE_HEAT,
     climate::CLIMATE_MODE_OFF,  // Unused
     climate::CLIMATE_MODE_FAN_ONLY
+    climate::CLIMATE_MODE_HEAT_COOL
 };
 // clang-format on
 
