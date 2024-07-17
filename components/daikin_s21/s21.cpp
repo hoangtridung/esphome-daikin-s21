@@ -28,6 +28,8 @@ std::string daikin_climate_mode_to_string(DaikinClimateMode mode) {
       return "Heat";
     case DaikinClimateMode::Fan:
       return "Fan";
+    case DaikinClimateMode::Ato:
+      return "Ato";
     default:
       return "UNKNOWN";
   }
