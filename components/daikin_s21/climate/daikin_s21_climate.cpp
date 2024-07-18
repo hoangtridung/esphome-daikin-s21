@@ -269,7 +269,7 @@ climate::ClimateAction DaikinS21Climate::d2e_climate_action() {
       } else if (setpoint < temp_inside) {
         return climate::CLIMATE_ACTION_COOLING;
       }
-      return climate::CLIMATE_ACTION_IDLE;
+      // return climate::CLIMATE_ACTION_IDLE;
     case DaikinClimateMode::Cool:
       return climate::CLIMATE_ACTION_COOLING;
     case DaikinClimateMode::Heat:
