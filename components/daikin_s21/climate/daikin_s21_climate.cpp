@@ -186,7 +186,6 @@ bool DaikinS21Climate::should_check_setpoint(climate::ClimateMode mode) {
 climate::ClimateMode DaikinS21Climate::d2e_climate_mode(
     DaikinClimateMode mode) {
   switch (mode) {
-    case DaikinClimateMode::Ato:
     case DaikinClimateMode::Auto:
       return climate::CLIMATE_MODE_HEAT_COOL;
     case DaikinClimateMode::Cool:
