@@ -14,13 +14,13 @@ namespace daikin_s21 {
 // clang-format off
 static const climate::ClimateMode OpModes[] = {
     climate::CLIMATE_MODE_OFF,  // Unused
-    climate::CLIMATE_MODE_AUTO,  // Unused
+    // climate::CLIMATE_MODE_OFF,  // Unused
     climate::CLIMATE_MODE_DRY,
     climate::CLIMATE_MODE_COOL,
     climate::CLIMATE_MODE_HEAT,
     climate::CLIMATE_MODE_OFF,  // Unused
     climate::CLIMATE_MODE_FAN_ONLY,
-    climate::CLIMATE_MODE_HEAT_COOL
+    climate::CLIMATE_MODE_HEAT_COOL 
 };
 // clang-format on
 
