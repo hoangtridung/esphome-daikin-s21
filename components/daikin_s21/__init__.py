@@ -26,7 +26,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_RX_UART): cv.use_id(UARTComponent),
         cv.Optional(CONF_DEBUG_PROTOCOL, default=False): cv.boolean,
     }
-).extend(cv.polling_component_schema("2s"))
+).extend(cv.polling_component_schema("60s"))
 
 S21_CLIENT_SCHEMA = cv.Schema(
     {
