@@ -7,12 +7,15 @@ import esphome.config_validation as cv
 from esphome.const import CONF_ID
 
 DEPENDENCIES = ["uart"]
-
 CONF_TX_UART = "tx_uart"
 CONF_RX_UART = "rx_uart"
 CONF_S21_ID = "s21_id"
 CONF_DEBUG_PROTOCOL = "debug_protocol"
-
+"""
+Add following line to debug UART S21 port:
+daikin_s21:
+    debug_protocol: true
+"""
 daikin_s21_ns = cg.esphome_ns.namespace("daikin_s21")
 DaikinS21 = daikin_s21_ns.class_("DaikinS21", cg.PollingComponent)
 DaikinS21Client = daikin_s21_ns.class_("DaikinS21Client")
@@ -26,8 +29,10 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_RX_UART): cv.use_id(UARTComponent),
         cv.Optional(CONF_DEBUG_PROTOCOL, default=False): cv.boolean,
     }
-).extend(cv.polling_component_schema("60s"))
-
+).extend(cv.polling_component_schema("2s"))
+"""
+S21_CLIENT_SCHEMA: Schema cho các client muốn sử dụng DaikinS21, yêu cầu khai báo s21_id để liên kết với instance DaikinS21.
+"""
 S21_CLIENT_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_S21_ID): cv.use_id(DaikinS21),
@@ -42,4 +47,4 @@ async def to_code(config):
     tx_uart = await cg.get_variable(config[CONF_TX_UART])
     rx_uart = await cg.get_variable(config[CONF_RX_UART])
     cg.add(var.set_uarts(tx_uart, rx_uart))
-    cg.add(var.set_debug_protocol(config[CONF_DEBUG_PROTOCOL]))
+    cg.add(var.set_debug_protocol(config[CONF_DEBUG_PROTOCOL])) 

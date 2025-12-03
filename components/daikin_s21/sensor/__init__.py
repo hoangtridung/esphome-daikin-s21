@@ -1,12 +1,12 @@
 """
-Sensor component for daikin_s21.
+Sensor component for Daikin S21, supporting inside, outside, coil temperatures, and fan speed.
 """
-
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor
 from esphome.const import (
     CONF_ID,
+    CONF_UPDATE_INTERVAL,
     UNIT_CELSIUS,
     ICON_THERMOMETER,
     DEVICE_CLASS_SPEED,
@@ -25,7 +25,6 @@ DaikinS21Sensor = daikin_s21_ns.class_(
     "DaikinS21Sensor", cg.PollingComponent, DaikinS21Client
 )
 
-CONF_S21_ID = "s21_id"
 CONF_INSIDE_TEMP = "inside_temperature"
 CONF_OUTSIDE_TEMP = "outside_temperature"
 CONF_COIL_TEMP = "coil_temperature"
@@ -63,10 +62,11 @@ CONFIG_SCHEMA = (
                 device_class=DEVICE_CLASS_SPEED,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
+            cv.Optional(CONF_UPDATE_INTERVAL, default="5s"): cv.positive_time_period_seconds,
         }
     )
     .extend(S21_CLIENT_SCHEMA)
-    .extend(cv.polling_component_schema("10s"))
+    .extend(cv.polling_component_schema("5s"))
 )
 
 
@@ -77,6 +77,12 @@ async def to_code(config):
     await cg.register_component(var, config)
     s21_var = await cg.get_variable(config[CONF_S21_ID])
     cg.add(var.set_s21(s21_var))
+    if s21_var is None:
+        raise cg.Invalid("s21_id must be set and valid!")
+    
+    
+    if CONF_UPDATE_INTERVAL in config:
+        cg.add(var.set_update_interval(config[CONF_UPDATE_INTERVAL].total_milliseconds))   
 
     if CONF_INSIDE_TEMP in config:
         sens = await sensor.new_sensor(config[CONF_INSIDE_TEMP])

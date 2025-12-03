@@ -3,26 +3,13 @@
 #include <map>
 #include "esphome/components/climate/climate.h"
 #include "esphome/components/sensor/sensor.h"
-#include "esphome/components/uart/uart.h"
 #include "esphome/core/component.h"
 #include "esphome/core/preferences.h"
 #include "../s21.h"
+#include <set>
 
 namespace esphome {
 namespace daikin_s21 {
-
-// clang-format off
-static const climate::ClimateMode OpModes[] = {
-    climate::CLIMATE_MODE_OFF,  // Unused
-    climate::CLIMATE_MODE_OFF,  // Unused
-    climate::CLIMATE_MODE_DRY,
-    climate::CLIMATE_MODE_COOL,
-    climate::CLIMATE_MODE_HEAT,
-    climate::CLIMATE_MODE_OFF,  // Unused
-    climate::CLIMATE_MODE_FAN_ONLY,
-    climate::CLIMATE_MODE_HEAT_COOL
-};
-// clang-format on
 
 class DaikinS21Climate : public climate::Climate,
                          public PollingComponent,
@@ -37,7 +24,11 @@ class DaikinS21Climate : public climate::Climate,
   void set_setpoint_interval(uint16_t seconds) {
     this->setpoint_interval = seconds;
   };
-  float get_s21_setpoint() { return this->s21->get_setpoint(); }
+  void set_has_presets(bool value) {
+    this->has_presets = value;
+    this->s21->set_has_presets(value);
+  };
+	void publish_state_if_changed();  // Thêm khai báo
   float get_room_temp_offset();
 
   bool should_check_setpoint(climate::ClimateMode mode);
@@ -46,16 +37,24 @@ class DaikinS21Climate : public climate::Climate,
   DaikinClimateMode e2d_climate_mode(climate::ClimateMode mode);
   const std::string d2e_fan_mode(DaikinFanMode mode);
   DaikinFanMode e2d_fan_mode(std::string mode);
-  climate::ClimateSwingMode d2e_swing_mode(bool swing_v, bool swing_h);
-  bool e2d_swing_v(climate::ClimateSwingMode mode);
-  bool e2d_swing_h(climate::ClimateSwingMode mode);
+  climate::ClimateSwingMode d2e_swing_mode(DaikinSwingMode swing_mode);
+  climate::ClimatePreset d2e_preset_mode(bool powerful, bool econo);
+  bool e2d_powerful(climate::ClimatePreset mode);
+  bool e2d_econo(climate::ClimatePreset mode);
 
+  void set_supported_modes(const std::set<esphome::climate::ClimateMode> &modes);
+	
+	
+	void set_supported_swing_modes(const std::set<climate::ClimateSwingMode> &modes);
  protected:
+  esphome::climate::ClimateTraits traits_;
+
   sensor::Sensor *room_sensor_{nullptr};
   float expected_s21_setpoint;
   uint8_t skip_setpoint_checks = 0;
   uint16_t setpoint_interval = 0;
   uint32_t last_setpoint_check = 0;
+  bool has_presets = true;
 
 
   ESPPreferenceObject auto_setpoint_pref;
@@ -75,6 +74,9 @@ class DaikinS21Climate : public climate::Climate,
   optional<float> load_setpoint(ESPPreferenceObject &pref);
   optional<float> load_setpoint(DaikinClimateMode mode);
   void set_s21_climate();
+	
+	bool custom_swing_modes_ = false;
+	std::set<climate::ClimateSwingMode> supported_swing_modes_;
 };
 
 }  // namespace daikin_s21
